@@ -5,6 +5,8 @@
  */
 package modele.plateau;
 
+import modele.deplacements.Direction;
+
 /**
  * Héros du jeu
  */
@@ -16,4 +18,7 @@ public class Heros extends EntiteDynamique {
     public boolean peutEtreEcrase() { return true; }
     public boolean peutServirDeSupport() { return true; }
     public boolean peutPermettreDeMonterDescendre() { return false; };
+
+    public Direction getDir(){return null;};
+    public void setDir(Direction d){};
 }

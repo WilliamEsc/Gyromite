@@ -7,8 +7,9 @@ import modele.deplacements.Direction;
  */
 public abstract class EntiteDynamique extends Entite {
     protected Entite oldEntite;
-    public EntiteDynamique(Jeu _jeu) { super(_jeu);
-    oldEntite=null;
+    public EntiteDynamique(Jeu _jeu) {
+        super(_jeu);
+        oldEntite=null;
     }
 
     public Entite getOldEntite(){
@@ -21,4 +22,8 @@ public abstract class EntiteDynamique extends Entite {
         return jeu.deplacerEntite(this, d);
     }
     public Entite regarderDansLaDirection(Direction d) {return jeu.regarderDansLaDirection(this, d);}
+    public Entite regarderDansLaDirectionBas(Direction d) {return jeu.regarderDansLaDirectionBas(this, d);}
+
+    public abstract Direction getDir();
+    public abstract void setDir(Direction d);
 }

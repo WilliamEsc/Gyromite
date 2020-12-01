@@ -5,10 +5,7 @@
  */
 package modele.plateau;
 
-import modele.deplacements.Controle4Directions;
-import modele.deplacements.Direction;
-import modele.deplacements.Gravite;
-import modele.deplacements.Ordonnanceur;
+import modele.deplacements.*;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -26,6 +23,8 @@ public class Jeu {
     private HashMap<Entite, Integer> cmptDeplV = new HashMap<Entite, Integer>();
 
     private Heros hector;
+    private Bot smick;
+    private Bot smick2;
 
     private HashMap<Entite, Point> map = new  HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -57,10 +56,21 @@ public class Jeu {
         hector = new Heros(this);
         addEntite(hector, 3, 2);
 
+        smick = new Bot(this);
+        addEntite(smick, 7, 8);
+
+        smick2 = new Bot(this);
+        addEntite(smick2, 2, 8);
+
         Gravite g = new Gravite();
         g.addEntiteDynamique(hector);
+        g.addEntiteDynamique(smick);
         ordonnanceur.add(g);
 
+        IA ia2=new IA();
+        ia2.addEntiteDynamique(smick2);
+        ia2.addEntiteDynamique(smick);
+        ordonnanceur.add(ia2);
         Controle4Directions.getInstance().addEntiteDynamique(hector);
         ordonnanceur.add(Controle4Directions.getInstance());
 
@@ -70,11 +80,13 @@ public class Jeu {
             addEntite(new Mur(this), x, SIZE_Y -1);
         }
 
+
         // murs extérieurs verticaux
         for (int y = 1; y < SIZE_Y; y++) {
             addEntite(new Mur(this), 0, y);
             addEntite(new Mur(this), SIZE_X -1, y);
         }
+        grilleEntites[5][SIZE_Y -1]=null;
 
         addEntite(new Mur(this), 2, 6);
         addEntite(new Mur(this), 3, 6);
@@ -97,6 +109,11 @@ public class Jeu {
         Point positionEntite = map.get(e);
         return objetALaPosition(calculerPointCible(positionEntite, d));
     }
+
+    public Entite regarderDansLaDirectionBas(Entite e, Direction d) {
+        Point positionEntite = map.get(e);
+        return objetALaPosition(calculerPointCible(calculerPointCible(positionEntite, d),Direction.bas));
+    }
     
     /** Si le déplacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
      * Sinon, rien n'est fait.
@@ -108,7 +125,8 @@ public class Jeu {
         
         Point pCible = calculerPointCible(pCourant, d);
         
-        if (contenuDansGrille(pCible) && (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde )) { // a adapter (collisions murs, etc.)
+        if (contenuDansGrille(pCible) &&
+                (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde )) { // a adapter (collisions murs, etc.)
             // compter le déplacement : 1 deplacement horizontal et vertical max par pas de temps par entité
             switch (d) {
                 case bas: case haut:

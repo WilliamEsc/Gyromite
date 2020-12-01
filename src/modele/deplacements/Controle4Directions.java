@@ -9,7 +9,8 @@ import modele.plateau.Corde;
  * clavier) à un ensemble d'entités dynamiques
  */
 public class Controle4Directions extends RealisateurDeDeplacement {
-    private Direction directionCourante;
+
+    protected Direction directionCourante;
     // Design pattern singleton
     private static Controle4Directions c3d;
 
