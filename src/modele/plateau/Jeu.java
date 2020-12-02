@@ -65,6 +65,7 @@ public class Jeu {
         Gravite g = new Gravite();
         g.addEntiteDynamique(hector);
         g.addEntiteDynamique(smick);
+        g.addEntiteDynamique(smick2);
         ordonnanceur.add(g);
 
         IA ia2=new IA();
@@ -87,6 +88,7 @@ public class Jeu {
             addEntite(new Mur(this), SIZE_X -1, y);
         }
         grilleEntites[5][SIZE_Y -1]=null;
+        addEntite(new Bombe(this), 6, 8);
 
         addEntite(new Mur(this), 2, 6);
         addEntite(new Mur(this), 3, 6);
@@ -126,7 +128,9 @@ public class Jeu {
         Point pCible = calculerPointCible(pCourant, d);
         
         if (contenuDansGrille(pCible) &&
-                (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde )) { // a adapter (collisions murs, etc.)
+                (objetALaPosition(pCible) == null ||
+                    objetALaPosition(pCible) instanceof Corde ||
+                        objetALaPosition(pCible).peutEtreEcrase())) { // a adapter (collisions murs, etc.)
             // compter le déplacement : 1 deplacement horizontal et vertical max par pas de temps par entité
             switch (d) {
                 case bas: case haut:
@@ -168,7 +172,11 @@ public class Jeu {
     }
     
     private void deplacerEntite(Point pCourant, Point pCible, EntiteDynamique e) {
-        grilleEntites[pCourant.x][pCourant.y] = e.getOldEntite();
+        if(e.ramasseBombe() && e.getOldEntite() instanceof Bombe){
+            grilleEntites[pCourant.x][pCourant.y] = null;
+        }else{
+            grilleEntites[pCourant.x][pCourant.y] = e.getOldEntite();
+        }
         e.setOldEntite(grilleEntites[pCible.x][pCible.y]);
         grilleEntites[pCible.x][pCible.y] = e;
         map.put(e, pCible);

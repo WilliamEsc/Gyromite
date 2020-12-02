@@ -23,6 +23,8 @@ public abstract class EntiteDynamique extends Entite {
     }
     public Entite regarderDansLaDirection(Direction d) {return jeu.regarderDansLaDirection(this, d);}
     public Entite regarderDansLaDirectionBas(Direction d) {return jeu.regarderDansLaDirectionBas(this, d);}
+    public boolean ramasseBombe() {return false;}
+
 
     public abstract Direction getDir();
     public abstract void setDir(Direction d);
