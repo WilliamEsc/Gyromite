@@ -24,11 +24,15 @@ public class Ordonnanceur extends Observable implements Runnable {
         new Thread(this).start();
     }
 
+    public void resetlstDepl(){
+        lstDeplacements.clear();
+    }
+
     @Override
     public void run() {
         boolean update = false;
 
-        while(true) {
+        while (true) {
             jeu.resetCmptDepl();
             for (RealisateurDeDeplacement d : lstDeplacements) {
                 if (d.realiserDeplacement())
@@ -36,6 +40,8 @@ public class Ordonnanceur extends Observable implements Runnable {
             }
 
             Controle4Directions.getInstance().resetDirection();
+
+           jeu.defaite();
 
             if (update) {
                 setChanged();
@@ -48,6 +54,5 @@ public class Ordonnanceur extends Observable implements Runnable {
                 e.printStackTrace();
             }
         }
-
     }
 }

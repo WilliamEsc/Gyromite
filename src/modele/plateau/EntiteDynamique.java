@@ -7,6 +7,8 @@ import modele.deplacements.Direction;
  */
 public abstract class EntiteDynamique extends Entite {
     protected Entite oldEntite;
+    protected Direction directionCourante;
+
     public EntiteDynamique(Jeu _jeu) {
         super(_jeu);
         oldEntite=null;
@@ -21,11 +23,12 @@ public abstract class EntiteDynamique extends Entite {
     public boolean avancerDirectionChoisie(Direction d) {
         return jeu.deplacerEntite(this, d);
     }
-    public Entite regarderDansLaDirection(Direction d) {return jeu.regarderDansLaDirection(this, d);}
-    public Entite regarderDansLaDirectionBas(Direction d) {return jeu.regarderDansLaDirectionBas(this, d);}
+    public Entite regarderDansLaDirection(Direction d) { return jeu.regarderDansLaDirection(this, d); }
+    public Entite regarderDansLaDirectionBas(Direction d) { return jeu.regarderDansLaDirectionBas(this, d); }
     public boolean ramasseBombe() {return false;}
 
 
-    public abstract Direction getDir();
-    public abstract void setDir(Direction d);
+
+    public Direction getDir(){ return directionCourante;}
+    public void setDir(Direction d){ directionCourante=d;}
 }

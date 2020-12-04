@@ -20,6 +20,4 @@ public class Heros extends EntiteDynamique {
     public boolean peutPermettreDeMonterDescendre() { return false; };
     public boolean ramasseBombe() {return true;}
 
-    public Direction getDir(){return null;};
-    public void setDir(Direction d){};
 }

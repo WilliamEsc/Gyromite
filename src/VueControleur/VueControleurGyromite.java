@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.deplacements.Controle4Directions;
+import modele.deplacements.ControleColonne;
 import modele.deplacements.Direction;
 import modele.plateau.*;
 
@@ -33,7 +34,8 @@ public class VueControleurGyromite extends JFrame implements Observer {
     private ImageIcon icoHero;
     private ImageIcon icoVide;
     private ImageIcon icoMur;
-    private ImageIcon icoColonne;
+    private ImageIcon icoColonneR;
+    private ImageIcon icoColonneB;
     private ImageIcon icoCorde;
     private ImageIcon icoBot;
     private ImageIcon icoBombe;
@@ -60,6 +62,8 @@ public class VueControleurGyromite extends JFrame implements Observer {
                     case KeyEvent.VK_RIGHT : Controle4Directions.getInstance().setDirectionCourante(Direction.droite); break;
                     case KeyEvent.VK_DOWN : Controle4Directions.getInstance().setDirectionCourante(Direction.bas); break;
                     case KeyEvent.VK_UP : Controle4Directions.getInstance().setDirectionCourante(Direction.haut); break;
+                    case KeyEvent.VK_A : ControleColonne.getInstance().inverserDirRouge(); break;
+                    case KeyEvent.VK_E : ControleColonne.getInstance().inverserDirBleu(); break;
                 }
             }
         });
@@ -69,9 +73,10 @@ public class VueControleurGyromite extends JFrame implements Observer {
     private void chargerLesIcones() {
         icoHero = chargerIcone("Images/Pacman.png");
         icoVide = chargerIcone("Images/Vide.png");
-        icoColonne = chargerIcone("Images/Colonne.png");
+        icoColonneR = chargerIcone("Images/ColonneRouge.png");
+        icoColonneB = chargerIcone("Images/ColonneBleu.png");
         icoMur = chargerIcone("Images/Mur.png");
-        icoCorde = chargerIcone("Images/Colonne.png");
+        icoCorde = chargerIcone("Images/Corde.png");
         icoBot = chargerIcone("Images/Fantome.png");
         icoBombe = chargerIcone("Images/Bombe.png");
     }
@@ -121,8 +126,10 @@ public class VueControleurGyromite extends JFrame implements Observer {
                     tabJLabel[x][y].setIcon(icoHero);
                 } else if (jeu.getGrille()[x][y] instanceof Mur) {
                     tabJLabel[x][y].setIcon(icoMur);
-                } else if (jeu.getGrille()[x][y] instanceof Colonne) {
-                    tabJLabel[x][y].setIcon(icoColonne);
+                } else if (jeu.getGrille()[x][y] instanceof ColonneRouge) {
+                    tabJLabel[x][y].setIcon(icoColonneR);
+                }else if (jeu.getGrille()[x][y] instanceof ColonneBleu) {
+                    tabJLabel[x][y].setIcon(icoColonneB);
                 }else if (jeu.getGrille()[x][y] instanceof Corde) {
                     tabJLabel[x][y].setIcon(icoCorde);
                 }else if (jeu.getGrille()[x][y] instanceof Bot) {

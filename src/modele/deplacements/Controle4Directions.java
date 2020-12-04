@@ -4,13 +4,14 @@ import modele.plateau.Entite;
 import modele.plateau.EntiteDynamique;
 import modele.plateau.Corde;
 
+import java.util.ArrayList;
+
 /**
  * Controle4Directions permet d'appliquer une direction (connexion avec le
  * clavier) à un ensemble d'entités dynamiques
  */
 public class Controle4Directions extends RealisateurDeDeplacement {
 
-    protected Direction directionCourante;
     // Design pattern singleton
     private static Controle4Directions c3d;
 
@@ -22,32 +23,35 @@ public class Controle4Directions extends RealisateurDeDeplacement {
     }
 
     public void setDirectionCourante(Direction _directionCourante) {
-        directionCourante = _directionCourante;
+        for (EntiteDynamique e : lstEntitesDynamiques) {
+            e.setDir(_directionCourante);
+        }
     }
 
     public boolean realiserDeplacement() {
         boolean ret = false;
         for (EntiteDynamique e : lstEntitesDynamiques) {
-            if (directionCourante != null)
-                switch (directionCourante) {
+            Direction _directionCourante= e.getDir();
+            if (_directionCourante != null)
+                switch (_directionCourante) {
                     case gauche:
                     case droite:
-                        if (e.avancerDirectionChoisie(directionCourante))
+                        if (e.avancerDirectionChoisie(_directionCourante))
                             ret = true;
                         break;
 
                     case haut:
                         // on ne peut pas sauter
-                        Entite eHaut = e.regarderDansLaDirection(Direction.haut);
+                        Entite eHaut = e.regarderDansLaDirection(_directionCourante);
                         if (eHaut instanceof Corde) {
-                            if (e.avancerDirectionChoisie(Direction.haut))
+                            if (e.avancerDirectionChoisie(_directionCourante))
                                 ret = true;
                         }
                         break;
                     case bas:
-                        Entite eBas = e.regarderDansLaDirection(Direction.bas);
+                        Entite eBas = e.regarderDansLaDirection(_directionCourante);
                         if (eBas instanceof Corde || eBas == null) {
-                            if (e.avancerDirectionChoisie(Direction.bas))
+                            if (e.avancerDirectionChoisie(_directionCourante))
                                 ret = true;
                         }
                         break;
@@ -59,6 +63,8 @@ public class Controle4Directions extends RealisateurDeDeplacement {
     }
 
     public void resetDirection() {
-        directionCourante = null;
+        for (EntiteDynamique e : lstEntitesDynamiques) {
+            e.setDir(null);
+        }
     }
 }

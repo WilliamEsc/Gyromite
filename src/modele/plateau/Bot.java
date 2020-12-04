@@ -14,10 +14,6 @@ import java.util.Random;
  */
 public class Bot extends EntiteDynamique {
     private Random r = new Random();
-    private Direction directionCourante;
-
-    public Direction getDir(){ return directionCourante;}
-    public void setDir(Direction d){ directionCourante=d;}
 
     public Random getR(){
         return r;
