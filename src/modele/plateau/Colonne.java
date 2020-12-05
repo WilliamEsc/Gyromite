@@ -5,7 +5,18 @@ import modele.deplacements.Direction;
 public class Colonne extends EntiteDynamique {
     private int longueur;
     private int longueurMax;
-    public Colonne(Jeu _jeu,Direction d,int n,int max) { super(_jeu); directionCourante=d; longueur=n;longueurMax=max; }
+    private int type;
+    public Colonne(Jeu _jeu,Direction d,int n,int max,int t) {
+        super(_jeu);
+        directionCourante=d;
+        longueur=n;
+        longueurMax=max;
+        type=t;
+    }
+
+    public int getType(){
+        return type;
+    }
 
     public void setLongueur(int n){
         longueur=n;

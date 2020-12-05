@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class Jeu {
 
-    public static final int SIZE_X = 20;
+    public static final int SIZE_X = 40;
     public static final int SIZE_Y = 10;
 
     // compteur de déplacements horizontal et vertical (1 max par défaut, à chaque pas de temps)
@@ -43,21 +43,28 @@ public class Jeu {
         cmptDeplV.clear();
     }
 
+    public void resetPartie(){
+        map.clear();
+        grilleEntites=new Entite[SIZE_X][SIZE_Y];
+        Controle4Directions.getInstance().resetLst();
+        ControleColonne.getInstance().resetLst();
+        IA.getInstance().resetLst();
+        Gravite.getInstance().resetLst();
+        ordonnanceur.resetlstDepl();
+        initialisationDesEntites();
+    }
 
-    //
-    // TODO
-    //
-    //
+    public boolean victoire() {
+        if(nbBombe == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public boolean defaite() {
         if(vie == 0)
         {
-            //map.clear();
-            //grilleEntites=new Entite[SIZE_X][SIZE_Y];
-            //Controle4Directions.getInstance().resetLst();
-            //ControleColonne.getInstance().resetLst();
-            //IA.getInstance().resetLst();
-            //ordonnanceur.resetlstDepl();
-            //initialisationDesEntites();
             return true;
         }
         return false;
@@ -74,9 +81,16 @@ public class Jeu {
     public Heros getHector() {
         return hector;
     }
+    public int getPosHector() {
+        return map.get(hector).x;
+    }
+    public Point debugHector() {
+        return map.get(hector);
+    }
     
     private void initialisationDesEntites() {
-        vie=1;
+        vie=3;
+        nbBombe=3;
         hector = new Heros(this);
         addEntite(hector, spawn.x, spawn.y);
 
@@ -86,27 +100,26 @@ public class Jeu {
         smick2 = new Bot(this);
         addEntite(smick2, 2, 8);
 
-        Gravite g = new Gravite();
-        g.addEntiteDynamique(hector);
-        g.addEntiteDynamique(smick);
-        g.addEntiteDynamique(smick2);
-        ordonnanceur.add(g);
 
-        IA ia2=new IA();
-        ia2.addEntiteDynamique(smick2);
-        ia2.addEntiteDynamique(smick);
-        ordonnanceur.add(ia2);
 
+        IA.getInstance().addEntiteDynamique(smick);
+        IA.getInstance().addEntiteDynamique(smick2);
+        ordonnanceur.add(IA.getInstance());
+
+        //ordonnanceur.add(ControleColonne.getInstance());//importante pour un déplacement en bloc des colonnes
+
+        ordonnanceur.add(createColonneRouge(Direction.bas,new Point(1,5),3,0,2));
+        ordonnanceur.add(createColonneRouge(Direction.bas,new Point(14,6),3,0,3));
+        ordonnanceur.add(createColonneBleu(Direction.droite,new Point(5,3),2,0,1));
+        ordonnanceur.add(createColonneBleu(Direction.bas,new Point(11,3),3,0,2));
+
+        Gravite.getInstance().addEntiteDynamique(hector);
+        Gravite.getInstance().addEntiteDynamique(smick);
+        Gravite.getInstance().addEntiteDynamique(smick2);
+        ordonnanceur.add(Gravite.getInstance());
 
         Controle4Directions.getInstance().addEntiteDynamique(hector);
         ordonnanceur.add(Controle4Directions.getInstance());
-
-
-        ordonnanceur.add(ControleColonne.getInstance());//importante pour un déplacement en bloc des colonnes
-
-        ordonnanceur.add(createColonneRouge(Direction.bas,new Point(1,5),3,0,2));
-        ordonnanceur.add(createColonneBleu(Direction.droite,new Point(5,3),2,0,1));
-        ordonnanceur.add(createColonneBleu(Direction.haut,new Point(11,3),3,0,2));
 
 
         // murs extérieurs horizontaux
@@ -123,10 +136,18 @@ public class Jeu {
         }
         grilleEntites[5][SIZE_Y -1]=null;//crée un trou dans le sol en bas
         addEntite(new Bombe(this), 6, 8);
+        addEntite(new Bombe(this), 7, 5);
+        addEntite(new Bombe(this), 18, 2);
+
+        addEntite(new Radis(this),7,8);
 
         createMur(Direction.droite,new Point(2,5),2);
         createMur(Direction.droite,new Point(2,3),2);
         createMur(Direction.droite,new Point(7,3),4);
+        createMur(Direction.droite,new Point(13,3),6);
+        createMur(Direction.haut,new Point(6,5),2);
+        createMur(Direction.droite,new Point(6,6),8);
+        createMur(Direction.droite,new Point(16,6),3);
 
         createCorde(Direction.haut,new Point(4,8),5);
     }
@@ -148,7 +169,13 @@ public class Jeu {
     private ControleColonne createColonneRouge(Direction d,Point p,int grandeurCol,int nbDepl,int nbDeplMax){
         ColonneRouge cRed;
         for (int i=grandeurCol;i>0;i--){
-            cRed=new ColonneRouge(this,d,nbDepl,nbDeplMax);
+            if(i==grandeurCol){
+                cRed=new ColonneRouge(this,d,nbDepl,nbDeplMax,0);
+            }else if(i==1){
+                cRed=new ColonneRouge(this,d,nbDepl,nbDeplMax,2);
+            }else {
+                cRed=new ColonneRouge(this,d,nbDepl,nbDeplMax,1);
+            }
             addEntite(cRed,p.x,p.y);
             ControleColonne.getInstance().addEntiteDynamique(cRed);
             p=calculerPointCible(p,d);
@@ -159,7 +186,13 @@ public class Jeu {
     private ControleColonne createColonneBleu(Direction d,Point p,int grandeurCol,int nbDepl,int nbDeplMax){
         ColonneBleu cBleu;
         for (int i=grandeurCol;i>0;i--){
-            cBleu=new ColonneBleu(this,d,nbDepl,nbDeplMax);
+            if(i==grandeurCol){
+                cBleu=new ColonneBleu(this,d,nbDepl,nbDeplMax,0);
+            }else if(i==1){
+                cBleu=new ColonneBleu(this,d,nbDepl,nbDeplMax,2);
+            }else {
+                cBleu=new ColonneBleu(this,d,nbDepl,nbDeplMax,1);
+            }
             addEntite(cBleu,p.x,p.y);
             ControleColonne.getInstance().addEntiteDynamique(cBleu);
             p=calculerPointCible(p,d);
@@ -170,9 +203,11 @@ public class Jeu {
     private Entite resetHeros(){
         Entite ret=hector.getOldEntite();
         vie--;
-        if(vie>0){
-            hector.setOldEntite(null);
-            map.remove(hector);
+        hector.setOldEntite(null);
+        map.remove(hector);
+        if(grilleEntites[spawn.x][spawn.y] instanceof EntiteDynamique){
+            addEntite(hector, spawn.x, spawn.y-2);
+        }else{
             addEntite(hector, spawn.x, spawn.y);
         }
         return ret;
@@ -207,6 +242,9 @@ public class Jeu {
      * Sinon, rien n'est fait.
      */
     public boolean deplacerEntite(EntiteDynamique e, Direction d) {
+        if(defaite() || victoire()){
+            return true;
+        }
         boolean retour = false;
         
         Point pCourant = map.get(e);
@@ -216,8 +254,10 @@ public class Jeu {
         if (contenuDansGrille(pCible) &&
                 (objetALaPosition(pCible) == null ||
                     objetALaPosition(pCible) instanceof Corde ||
+                        objetALaPosition(pCible) instanceof Radis ||
                         objetALaPosition(pCible).peutEtreEcrase())) { // a adapter (collisions murs, etc.)
             // compter le déplacement : 1 deplacement horizontal et vertical max par pas de temps par entité
+
             switch (d) {
                 case bas: case haut:
                     if (cmptDeplV.get(e) == null) {
@@ -261,6 +301,8 @@ public class Jeu {
             deplacerColonne(pCourant, pCible, e);
         }else if(e instanceof Heros){
             deplacerHeros(pCourant, pCible, e);
+        }else if(e instanceof Bot){
+            deplacerBot(pCourant, pCible, e);
         }else {
             grilleEntites[pCourant.x][pCourant.y] = e.getOldEntite();
             Entite cible=grilleEntites[pCible.x][pCible.y];
@@ -291,6 +333,7 @@ public class Jeu {
         else
         {
             if(e.ramasseBombe() && cible instanceof Bombe){
+                nbBombe--;
                 map.remove(cible);
                 e.setOldEntite(null);
             }else{
@@ -301,20 +344,33 @@ public class Jeu {
         }
     }
 
+    private void deplacerBot(Point pCourant, Point pCible, EntiteDynamique e) {
+        grilleEntites[pCourant.x][pCourant.y] = e.getOldEntite();
+        Entite cible=grilleEntites[pCible.x][pCible.y];
+        if( cible instanceof Radis ){
+            map.remove(cible);
+            e.setOldEntite(null);
+        }else if(cible instanceof Heros){
+            e.setOldEntite(resetHeros());
+        }else{
+            e.setOldEntite(cible);
+        }
+        grilleEntites[pCible.x][pCible.y] = e;
+        map.put(e, pCible);
+    }
+
     private void deplacerColonne(Point pCourant, Point pCible, EntiteDynamique e) {
                 grilleEntites[pCourant.x][pCourant.y] = e.getOldEntite();
                 EntiteDynamique cible=(EntiteDynamique) grilleEntites[pCible.x][pCible.y];
-                if(cible instanceof Heros){
+                if(cible != null){
                     Entite eDir=cible.regarderDansLaDirection(e.getDir());
                     if(eDir instanceof  Mur || eDir instanceof Colonne){
+                        if(cible instanceof Heros)
                         e.setOldEntite(resetHeros());
+                        if(cible instanceof Bot)
+                        e.setOldEntite(killBot(cible));
                     }else{
                         cible.avancerDirectionChoisie(e.getDir());
-                    }
-                }else if(cible instanceof Bot){
-                    Entite eDir=cible.regarderDansLaDirection(e.getDir());
-                    if(eDir instanceof  Mur || eDir instanceof Colonne){
-                        e.setOldEntite(killBot(cible));
                     }
                 }else{
                     e.setOldEntite(grilleEntites[pCible.x][pCible.y]);

@@ -1,6 +1,7 @@
 package modele.deplacements;
 
 import modele.plateau.EntiteDynamique;
+import modele.plateau.Heros;
 
 import java.util.ArrayList;
 
@@ -15,5 +16,12 @@ public abstract class RealisateurDeDeplacement {
     public void addEntiteDynamique(EntiteDynamique ed) {lstEntitesDynamiques.add(ed);}
     public void resetLst(){
         lstEntitesDynamiques= new ArrayList<EntiteDynamique>();
+    }
+    public void delHector(){
+        for(EntiteDynamique e: lstEntitesDynamiques){
+            if(e instanceof Heros){
+                lstEntitesDynamiques.remove(e);
+            }
+        }
     }
 }

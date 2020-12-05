@@ -14,9 +14,19 @@ import java.util.Random;
  */
 public class Bot extends EntiteDynamique {
     private Random r = new Random();
+    private int stop=0;
 
     public Random getR(){
         return r;
+    }
+    public int getStop(){
+        return stop;
+    }
+    public void setStop(int n){
+        stop=n;
+    }
+    public void addStop(int n){
+        stop+=n;
     }
 
     public Bot(Jeu _jeu) {

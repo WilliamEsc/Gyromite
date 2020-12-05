@@ -39,14 +39,12 @@ public class Ordonnanceur extends Observable implements Runnable {
                     update = true;
             }
 
-            Controle4Directions.getInstance().resetDirection();
-
-           jeu.defaite();
-
             if (update) {
                 setChanged();
                 notifyObservers();
             }
+
+            Controle4Directions.getInstance().resetDirection();//ici pour avoir une valeur de direction lors de l'affichage
 
             try {
                 sleep(pause);
