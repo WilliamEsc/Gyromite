@@ -28,7 +28,6 @@ public class Jeu {
     private Bot smick2;
     private int vie;
     private int nbBombe;
-    //private boolean affScreen = true;
 
     private HashMap<Entite, Point> map = new  HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -53,18 +52,11 @@ public class Jeu {
         Gravite.getInstance().resetLst();
         ordonnanceur.resetlstDepl();
         initialisationDesEntites();
-        //affScreen=true;
     }
 
     public boolean victoire() {
         if(nbBombe == 0)
         {
-            //if (affScreen) {
-            //    System.out.println("Vous avez récuperer toutes la chloroquine");
-            //    System.out.println("bien joué!!!");
-            //    System.out.println("press P to restart");
-            //    affScreen=false;
-            //}
             return true;
         }
         return false;
@@ -73,11 +65,6 @@ public class Jeu {
     public boolean defaite() {
         if(vie == 0)
         {
-            //if (affScreen){
-                //System.out.println("Vous êtes mort....");
-                //System.out.println("press P to restart");
-                //affScreen=false;
-            //}
             return true;
         }
         return false;
@@ -99,9 +86,6 @@ public class Jeu {
     }
     public void reduitBombe(){
         nbBombe--;
-        //System.out.print("Il reste ");
-        //System.out.print(nbBombe);
-        //System.out.println(" pillule de chloroquine");
     }
 
     private void initialisationDesEntites() {
@@ -114,7 +98,7 @@ public class Jeu {
         addEntite(smick, 8, 8);
 
         smick2 = new Bot(this);
-        addEntite(smick2, 2, 8);
+        addEntite(smick2, 1, 8);
 
 
 
@@ -251,9 +235,6 @@ public class Jeu {
     public Entite resetHeros(){
         Entite ret=hector.getOldEntite();
         vie--;
-        //System.out.print("Il vous reste ");
-        //System.out.print(vie);
-        //System.out.println(" Vie...");
         hector.setOldEntite(null);
         map.remove(hector);
         if(grilleEntites[spawn.x][spawn.y] instanceof EntiteDynamique){

@@ -42,6 +42,8 @@ public class VueControleurGyromite extends JFrame implements Observer {
     private ImageIcon icoCorde;
     private ImageIcon icoRadis;
 
+    private boolean affScreen = true;
+
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
 
 
@@ -160,6 +162,7 @@ public class VueControleurGyromite extends JFrame implements Observer {
      */
     private void mettreAJourAffichage() {
         if(!jeu.defaite() && !jeu.victoire()) {
+            affScreen=true;
             tour = (tour + 1) % 2;
             int debutScreenX=jeu.getPosHector()-10;
             if(debutScreenX<0){
@@ -190,6 +193,15 @@ public class VueControleurGyromite extends JFrame implements Observer {
                     }
                 }
             }
+        }else if(jeu.defaite() && affScreen){
+            System.out.println("Vous êtes mort....");
+            System.out.println("press P to restart");
+            affScreen=false;
+        }else if(jeu.victoire() && affScreen){
+           System.out.println("Vous avez récuperer toutes la chloroquine");
+           System.out.println("bien joué!!!");
+           System.out.println("press P to restart");
+           affScreen=false;
         }
     }
 
