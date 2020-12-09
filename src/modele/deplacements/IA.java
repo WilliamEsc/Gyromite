@@ -30,12 +30,14 @@ public class IA extends RealisateurDeDeplacement {
                             !(eGauche instanceof Colonne) &&
                             bot.regarderDansLaDirectionBas(_directionCourante) != null)
                         {
+                            //si il ne rencontre pas de radis ou si il ont été stopé assez longtemps
                             if (!(eGauche instanceof Radis) || bot.getStop() >= 5) {
                                 if (bot.avancerDirectionChoisie(_directionCourante)) {
                                     ret = true;
                                     bot.setStop(0);
                                 }
                             } else {
+                                //incremente le compteur d'arret
                                 bot.addStop(1);
                             }
                         } else {
@@ -50,6 +52,8 @@ public class IA extends RealisateurDeDeplacement {
                             !(eDroite instanceof Colonne) &&
                             bot.regarderDansLaDirectionBas(_directionCourante) != null)
                         {
+                            //si il ne rencontre pas de radis ou si il ont été stopé assez longtemps
+
                             if (!(eDroite instanceof Radis) || bot.getStop() >= 5) {
                                 if (bot.avancerDirectionChoisie(_directionCourante))
                                 {
@@ -57,6 +61,7 @@ public class IA extends RealisateurDeDeplacement {
                                     bot.setStop(0);
                                 }
                             } else {
+                                //incremente le compteur d'arret
                                 bot.addStop(1);
                             }
                         } else {
@@ -86,26 +91,31 @@ public class IA extends RealisateurDeDeplacement {
         return ret;
     }
 
+    //Ia des bots: choix des directions quand ils rencontrent une corde
     private void choixDir(Bot b){
         Random rand= new Random();
         Direction[] dir=new Direction[4];
         int nbChoix=0;
+        //Quand il se dirige a droite ou gauche
         if(
                 b.getOldEntite() instanceof Corde &&
                         (b.getDir()==Direction.droite || b.getDir()==Direction.gauche)
         ){
+            //si il est possible de monter
             if( (b.regarderDansLaDirection(Direction.haut) instanceof Corde) ||
                 (b.regarderDansLaDirection(Direction.haut) instanceof Heros)
             ){
                 dir[nbChoix]=Direction.haut;
                 nbChoix++;
             }
+            //si il est possible de monter
             if( (b.regarderDansLaDirection(Direction.bas) instanceof Corde) ||
                  (b.regarderDansLaDirection(Direction.bas) instanceof Heros)
             ){
                 dir[nbChoix]=Direction.bas;
                 nbChoix++;
             }
+            //si il est possible d'allez a droite
             if(
                !(b.regarderDansLaDirection(Direction.droite) instanceof Mur) &&
                        b.regarderDansLaDirectionBas(Direction.droite) != null
@@ -113,6 +123,7 @@ public class IA extends RealisateurDeDeplacement {
                 dir[nbChoix]=Direction.droite;
                 nbChoix++;
             }
+            //si il est possible d'allez a gauche
             if(
                     !(b.regarderDansLaDirection(Direction.gauche) instanceof Mur) &&
                             b.regarderDansLaDirectionBas(Direction.gauche) != null
@@ -122,6 +133,7 @@ public class IA extends RealisateurDeDeplacement {
             }
             b.setDir(dir[rand.nextInt(nbChoix)]);
         }
+        //si il n'est plus possible de monter
         else if(
                 b.getOldEntite() instanceof Corde && (
                 b.regarderDansLaDirection(Direction.haut) == null ||
@@ -147,7 +159,9 @@ public class IA extends RealisateurDeDeplacement {
                 nbChoix++;
             }
             b.setDir(dir[rand.nextInt(nbChoix)]);
-        } else if(
+        }
+        //si il n'est plus possible de descendre
+        else if(
                 b.getOldEntite() instanceof Corde && (
                 b.regarderDansLaDirection(Direction.bas) == null ||
                 b.regarderDansLaDirection(Direction.bas) instanceof Mur||

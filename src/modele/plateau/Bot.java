@@ -7,6 +7,7 @@ package modele.plateau;
 
 import modele.deplacements.Direction;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -43,5 +44,20 @@ public class Bot extends EntiteDynamique {
 
     public boolean peutEtreEcrase() { return true; }
     public boolean peutServirDeSupport() { return false; }
-    public boolean peutPermettreDeMonterDescendre() { return false; };
+    public boolean peutPermettreDeMonterDescendre() { return false; }
+
+    public void deplacer(Jeu _jeu, Point pCourant, Point pCible){
+        _jeu.getGrille()[pCourant.x][pCourant.y] = getOldEntite();
+        Entite cible=_jeu.getGrille()[pCible.x][pCible.y];
+        if( cible instanceof Radis ){
+            _jeu.mapRemove(cible);
+            setOldEntite(null);
+        }else if(cible instanceof Heros){
+            setOldEntite(_jeu.resetHeros());
+        }else{
+            setOldEntite(cible);
+        }
+        _jeu.getGrille()[pCible.x][pCible.y] = this;
+        _jeu.mapPut(this,pCible);
+    }
 }

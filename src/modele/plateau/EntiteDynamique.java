@@ -2,6 +2,8 @@ package modele.plateau;
 
 import modele.deplacements.Direction;
 
+import java.awt.*;
+
 /**
  * Entités amenées à bouger (colonnes, ennemis)
  */
@@ -27,7 +29,12 @@ public abstract class EntiteDynamique extends Entite {
     public Entite regarderDansLaDirectionBas(Direction d) { return jeu.regarderDansLaDirectionBas(this, d); }
     public boolean ramasseBombe() {return false;}
 
-
+    public void deplacer(Jeu _jeu, Point pCourant, Point pCible){
+        _jeu.getGrille()[pCourant.x][pCourant.y] = getOldEntite();
+        setOldEntite(_jeu.getGrille()[pCible.x][pCible.y]);
+        _jeu.getGrille()[pCible.x][pCible.y] = this;
+        _jeu.mapPut(this, pCible);
+    }
 
     public Direction getDir(){ return directionCourante;}
     public void setDir(Direction d){ directionCourante=d;}

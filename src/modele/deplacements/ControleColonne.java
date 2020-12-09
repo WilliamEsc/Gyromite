@@ -16,7 +16,7 @@ public class ControleColonne extends RealisateurDeDeplacement {
         return cc;
     }
 
-    public void inverserDirRouge(){
+    public void inverserDirRouge(){ //inverse la direction des colonnes rouges
         for (EntiteDynamique e : lstEntitesDynamiques) {
             if(e instanceof ColonneRouge){
                 Colonne col=(Colonne) e;
@@ -34,7 +34,7 @@ public class ControleColonne extends RealisateurDeDeplacement {
         }
     }
 
-    public void inverserDirBleu(){
+    public void inverserDirBleu(){//inverse la direction des colonnes bleu
         for (EntiteDynamique e : lstEntitesDynamiques) {
             if(e instanceof ColonneBleu){
                 Colonne col=(Colonne) e;
