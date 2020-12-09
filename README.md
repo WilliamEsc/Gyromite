@@ -1,11 +1,9 @@
 # Gyromite
 ## Description du jeu : 
 [https://nintendo.fandom.com/wiki/Gyromite](https://nintendo.fandom.com/wiki/Gyromite "Descrption du jeu")
-
-##Résumé :
+## Résumé :
 Vous contrôlez le Professeur Raoult qui se déplace pour ramasser les gélules d'[hydroxychloroquine](https://fr.wikipedia.org/wiki/Hydroxychloroquine "hydroxychloroquine") dans son laboratoire, vu en 2D de côté. Le laboratoire est composé d’un ensemble de niveaux. Le scientifique peut se déplacer à gauche, à droite, et grimper ou descendre à l’aide de cordes. Un niveau peut contenir des piliers (bleus et rouges) qui peuvent monter ou descendre lorsque le joueur appuie sur une touche spécifique (respectivement les touches `e` et `a`). Enfin, le professeur doit éviter les ennemis, les Macronqui sont stoppés lorsqu'ils rencontrent un gilet-jaune. L’objectif est donc de récupérer toutes les gélules, en évitant les ennemis, tout en manipulant les piliers pour créer des chemins si nécessaire.
-
-##Précisions concernant l’implémentation :
+## Précisions concernant l’implémentation :
 * Le plateau est représenté par une grille de cases du côté de la vue et une grille de cases du côté du modèle. Les murs et sols sont matérialisés par des cases pleines, les couloirs par des cases vides.
 * Les mouvements sont discrétisés : on avance case par case, pas d’autres positions intermédiaires (pixel, etc.). Le temps est discrétisé: pour chaque entité, l’entité se déplace d’une seule case par pas de temps.
 * Les déplacements des Entités sont gérés au tour-par-tour par le biais des classes RéalisateurDeDéplacement et Ordonnanceur. L’Ordonnanceur déclenche les RéalisateurDeDéplacements de manière séquentielle.
